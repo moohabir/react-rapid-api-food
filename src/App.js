@@ -19,10 +19,11 @@ export default function App() {
       }
     };
 
-    fetch("https://movies-app1.p.rapidapi.com/api/movies", options)
+    fetch(`https://movies-app1.p.rapidapi.com/api/movies${endPoints}`, options)
       .then((response) => response.json())
       .then((response) => console.log(response))
-      .then((data) => console.log(data))
+      .then((data) => setFilms(data))
+      .then((data) => setFilms(films))
       .catch((err) => console.error(err));
   };
 
