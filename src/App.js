@@ -22,7 +22,7 @@ export default function App() {
     fetch("https://movies-app1.p.rapidapi.com/api/movies", options)
       .then((response) => response.json())
       .then((response) => console.log(response))
-      .then((data) => setFilms(data))
+      .then((data) => console.log(data))
       .catch((err) => console.error(err));
   };
 
@@ -31,7 +31,6 @@ export default function App() {
   }
   const submitHandler = (e) => {
     e.preventDefaoult();
-    setFilms(endPoints);
   };
 
   return (
@@ -40,6 +39,15 @@ export default function App() {
         <input type="text" value={endPoints} onChange={changeHandler} />
         <button type="submit">Submit</button>
       </form>
+      {films.map((film, index) => {
+        return (
+          <div key={index}>
+            <img src={film.image} alt={film.title} />
+            <h2>{film.title}</h2>
+            <span>{film.year}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
