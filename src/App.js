@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import "./styles.css";
 
 export default function App() {
-  const [enPoints, setEndPoints] = useState("");
+  const [endPoints, setEndPoints] = useState("");
   const [movies, setMovies] = useState([]);
 
+  useEffect(() => {
+    getMovies();
+  }, [endPoints]);
+
   const getMovies = () => {
-    fetch(`https://1mdb-data-searching.p.rapidapi.com/om?t=+${enPoints}`, {
+    fetch(`https://1mdb-data-searching.p.rapidapi.com/om?q=+${endPoints}`, {
       method: "GET",
       headers: {
         "X-RapidAPI-Host": "1mdb-data-searching.p.rapidapi.com",
@@ -14,7 +18,7 @@ export default function App() {
       }
     })
       .then((response) => {
-        console.log(response.json());
+        return response.json();
       })
       .then((data) => {
         setMovies(data);
@@ -24,18 +28,23 @@ export default function App() {
       });
   };
 
-  useEffect(() => {
-    getMovies();
-  }, []);
   function changeHandler(e) {
-    e.preventDefault();
-    setEndPoints(enPoints);
+    setEndPoints(e.target.value);
   }
+  const submitHandler = (e) => {
+    e.preventDefaoult();
+  };
 
   return (
-    <form className="App">
-      <input type="text" value={enPoints} onChange={changeHandler} />
-      <button type="submit">Submit</button>
-    </form>
+    <div className="app">
+      <form onSubmit={submitHandler}>
+        <input type="text" value={endPoints} onChange={changeHandler} />
+        <button type="submit">Submit</button>
+      </form>
+      {movies.map((movie, index) => {
+        return <div key={index}></div>;
+      })}
+      ;
+    </div>
   );
 }
