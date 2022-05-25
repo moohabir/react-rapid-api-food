@@ -1,54 +1,62 @@
-import { useEffect, useState } from "react";
-import "./styles.css";
+import React, { useState, useEffect } from "react";
 
-export default function App() {
-  const [endPoints, setEndPoints] = useState("");
-  const [films, setFilms] = useState([]);
-  const [finalpoints, setFinalpoints] = useState("");
+function App() {
+  const [query, setQuery] = useState("");
+  const [container, setContainer] = useState([]);
+  const [endpoints, setEndpoints] = useState("");
 
   useEffect(() => {
-    getMovies(endPoints);
-  }, [endPoints]);
+    getresults();
+  }, [endpoints]);
 
-  const getMovies = (endPoints) => {
-    const options = {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Host": "movies-app1.p.rapidapi.com",
-        "X-RapidAPI-Key": "bc8006d48amsh69e5064484e98b7p16d73bjsn37edd8bac393"
+  function getresults() {
+    fetch(
+      `https://edamam-food-and-grocery-database.p.rapidapi.com/parser?ingr=+${query}`,
+      {
+        method: "GET",
+        headers: {
+          "X-RapidAPI-Host": "edamam-food-and-grocery-database.p.rapidapi.com",
+          "X-RapidAPI-Key": "bc8006d48amsh69e5064484e98b7p16d73bjsn37edd8bac393"
+        }
       }
-    };
+    )
+      .then((response) => {
+        return response.json();
+      })
 
-    fetch(`https://movies-app1.p.rapidapi.com/api/movies${endPoints}`, options)
-      .then((response) => response.json())
-      .then((response) => console.log(response))
-      .then((data) => setFilms(data))
-      .then((data) => setFilms(films))
-      .catch((err) => console.error(err));
-  };
-
-  function changeHandler(e) {
-    setEndPoints(e.target.value);
+      .then((data) => {
+        setContainer(data.hints);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
-  const submitHandler = (e) => {
-    e.preventDefaoult();
-  };
 
+  function submithandler(e) {
+    e.preventDefault();
+    setEndpoints(query);
+  }
+
+  function changeHandler(event) {
+    setQuery(event.target.value);
+  }
   return (
-    <div className="app">
-      <form onSubmit={submitHandler}>
-        <input type="text" value={endPoints} onChange={changeHandler} />
+    <div className="App">
+      <form onSubmit={submithandler}>
+        <input type="text" value={query} onChange={changeHandler} />
         <button type="submit">Submit</button>
       </form>
-      {films.map((film, index) => {
+
+      {container.map((item, index) => {
         return (
           <div key={index}>
-            <img src={film.image} alt={film.title} />
-            <h2>{film.title}</h2>
-            <span>{film.year}</span>
+            <img src={item.food.image} alt="" />
+            <p>{item.food.label}</p>
           </div>
         );
       })}
     </div>
   );
 }
+
+export default App;
