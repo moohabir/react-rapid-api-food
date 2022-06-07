@@ -1,2 +1,2 @@
-# react-rapid-api-movie
+# react-rapid-api-food
 Created with CodeSandbox
